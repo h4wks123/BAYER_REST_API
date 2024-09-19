@@ -77,7 +77,6 @@ namespace BAYER_REST_API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrderType(Guid id, [FromBody] UpdateOrderTypeDto updateOrderTypeDto)
         {
-            // Find the existing order
             var order = await _orderContext.Orders.FindAsync(id);
             
             if (order == null)
@@ -85,16 +84,13 @@ namespace BAYER_REST_API.Controllers
                 return NotFound("Order not found.");
             }
 
-            // Validate the new order type
             if (updateOrderTypeDto.Type != "ongoing" && updateOrderTypeDto.Type != "cancelled" && updateOrderTypeDto.Type != "completed")
             {
                 return BadRequest("Invalid order type. Must be ongoing, cancelled, or completed.");
             }
 
-            // Update the order type
             order.Type = updateOrderTypeDto.Type;
 
-            // Save changes to the database
             await _orderContext.SaveChangesAsync();
 
             return Ok(order);
