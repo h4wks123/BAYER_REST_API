@@ -61,9 +61,8 @@ public class OrderController : ControllerBase
         return Ok(completedOrders);
     }
 
-    // <summary> controller action for creating an order from database  </summary>
+    // <summary> controller action for creating an order from database </summary>
     [HttpPost]
-    [Route("createOrder")]
     public IActionResult CreateOrder(Guid userId, Guid bakeryId, AddOrderDto addOrderDto)
     {
 
@@ -72,12 +71,12 @@ public class OrderController : ControllerBase
 
         if (food == null)
         {
-            return BadRequest("Bakery does not exist.");
+            return NotFound("Bakery does not exist.");
         }
 
         if (user == null)
         {
-            return BadRequest("User does not exist.");
+            return NotFound("User does not exist.");
         }
 
         if (addOrderDto.Quantity > food.Quantity)
@@ -100,19 +99,17 @@ public class OrderController : ControllerBase
         _bakeryContext.SaveChanges();
 
         return Ok(order);
-
     }
 
     // <summary> controller for updating order in database </summary>
     [HttpPut]
-    [Route("OrderType")]
     public IActionResult UpdateOrderType(Guid OrderId, UpdateOrderDto updateOrderDTO)
     {
         var order = _orderContext.Order.Find(OrderId);
 
         if (order == null)
         {
-            return BadRequest("order Id does not exist.");
+            return NotFound("order Id does not exist.");
         }
         
         order.Type = updateOrderDTO.Type;

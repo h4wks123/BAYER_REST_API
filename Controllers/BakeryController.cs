@@ -23,6 +23,7 @@ public class BakeryController : ControllerBase
 
     // <summary> controller action for getting all food from database  </summary>
     [HttpGet]
+    [Route("AllFood")]
     public IActionResult GetAllAvailableFood()
     {
         var allFood = _bakeryContext.Bakery.ToList();
@@ -49,7 +50,6 @@ public class BakeryController : ControllerBase
 
     // <summary> controller action for deleting a food from database  </summary>
     [HttpDelete]
-    [Route("DeleteFood")]
     public IActionResult DeleteFood(Guid bakeryId)
     {
         var food = _bakeryContext.Bakery.Find(bakeryId);
@@ -65,16 +65,15 @@ public class BakeryController : ControllerBase
         return Ok($"Food {bakeryId} has been deleted successfully");
     }
 
-    // <summary> controller for updating user in database </summary>
+    // <summary> controller for updating food in database </summary>
     [HttpPut]
-    [Route("UpdateFood")]
     public IActionResult UpdateFood(Guid bakeryId, UpdateBakeryDto updateBakeryDto)
     {
         var food = _bakeryContext.Bakery.Find(bakeryId);
 
         if (food is null)
         {
-            return BadRequest("Food does not exist.");
+            return NotFound("Food does not exist.");
         }
 
         food.Name = updateBakeryDto.Name;

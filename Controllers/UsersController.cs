@@ -32,7 +32,6 @@ public class UsersController : ControllerBase
 
     // <summary> controller action for adding a user to database  </summary>
     [HttpPost]
-    [Route("AddUser")]
     public IActionResult AddUser(AddUserDto addUserDto)
     {
         var userEntity = new User()
@@ -50,7 +49,6 @@ public class UsersController : ControllerBase
 
     // <summary> controller action for deleting a user from database  </summary>
     [HttpDelete]
-    [Route("DeleteUser")]
     public IActionResult DeleteUsers(Guid userId)
     {
         var user = _userContext.User.Find(userId);
@@ -68,7 +66,6 @@ public class UsersController : ControllerBase
 
     // <summary> controller for updating user in database </summary>
     [HttpPut]
-    [Route("UpdateUser")]
     public IActionResult UpdateUserType(Guid userId, UpdateUserDto updateUserDto)
     {
         var user = _userContext.User.Find(userId);
