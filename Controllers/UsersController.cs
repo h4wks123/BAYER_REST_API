@@ -1,4 +1,4 @@
-using REST_API.Data.Context;
+using REST_API.Data;
 using REST_API.Models.DTO.Users;
 using REST_API.Models.Entities;
 using Microsoft.AspNetCore.Http;
@@ -6,19 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace REST_API.Controllers;
 
+// <summary> controller for users which defines api calls  </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
 {
+    // <summary> Context for accessing user data in the database. </summary>
     private readonly UserContext _userContext;
 
+    // <summary> Constructor for the UsersController. </summary>
     public UsersController(UserContext userContext)
     {
         _userContext = userContext;
     }
 
-
+    // <summary> controller action for getting all users from database  </summary>
     [HttpGet]
+    [Route("AllUsers")]
     public IActionResult GetAllUsers()
     {
         var allUsers = _userContext.User.ToList();
@@ -26,9 +30,10 @@ public class UsersController : ControllerBase
         return Ok(allUsers);
     }
 
-
+    // <summary> controller action for adding a user to database  </summary>
     [HttpPost]
-    public IActionResult AddCustomer(AddUserDto addUserDto)
+    [Route("AddUser")]
+    public IActionResult AddUser(AddUserDto addUserDto)
     {
         var userEntity = new User()
         {
@@ -43,8 +48,9 @@ public class UsersController : ControllerBase
         return Ok(userEntity);
     }
 
+    // <summary> controller action for deleting a user from database  </summary>
     [HttpDelete]
-    [Route("{userId:guid}")]
+    [Route("DeleteUser")]
     public IActionResult DeleteUsers(Guid userId)
     {
         var user = _userContext.User.Find(userId);
@@ -57,12 +63,13 @@ public class UsersController : ControllerBase
         _userContext.User.Remove(user);
         _userContext.SaveChanges();
 
-        return Ok();
+        return Ok($"User {userId} has been deleted successfully");
     }
 
+    // <summary> controller for updating user in database </summary>
     [HttpPut]
-    [Route("{userId:guid}")]
-    public IActionResult UpdateOrderType(Guid userId, UpdateUserDto updateUserDto)
+    [Route("UpdateUser")]
+    public IActionResult UpdateUserType(Guid userId, UpdateUserDto updateUserDto)
     {
         var user = _userContext.User.Find(userId);
 
@@ -76,7 +83,7 @@ public class UsersController : ControllerBase
 
         _userContext.SaveChanges();
 
-        return Ok(user.Name + user.Email);
+        return Ok($"User {userId} has been updated successfully");
     }
 
 }

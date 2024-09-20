@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using REST_API.Data.Context;
-using REST_API.Models.Entities;
+using REST_API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +7,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// <summary> initialize db context to use in memory database </summary>
+// <remarks> UseInMemoryDatabase for simulating database operations </remarks>
 builder.Services.AddDbContext<UserContext>(opt =>
     opt.UseInMemoryDatabase("User"));
 builder.Services.AddDbContext<BakeryContext>(opt =>
@@ -17,7 +19,7 @@ builder.Services.AddDbContext<OrderContext>(opt =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// <summary> Configure the HTTP request pipeline. </summary>
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

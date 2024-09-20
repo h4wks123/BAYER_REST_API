@@ -1,4 +1,4 @@
-using REST_API.Data.Context;
+using REST_API.Data;
 using REST_API.Models.DTO.Bakery;
 using REST_API.Models.Entities;
 using Microsoft.AspNetCore.Http;
@@ -6,18 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace REST_API.Controllers;
 
+// <summary> controller for bakery which defines api calls </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class BakeryController : ControllerBase
 {
+
+    // <summary> Context for accessing food data in the database. </summary>
     private readonly BakeryContext _bakeryContext;
 
+    // <summary> Constructor for the BakeryController. </summary>
     public BakeryController(BakeryContext bakeryContext)
     {
         _bakeryContext = bakeryContext;
     }
 
-
+    // <summary> controller action for getting all food from database  </summary>
     [HttpGet]
     public IActionResult GetAllAvailableFood()
     {
@@ -26,7 +30,7 @@ public class BakeryController : ControllerBase
         return Ok(allFood);
     }
 
-
+    // <summary> controller action for adding a food to database  </summary>
     [HttpPost]
     public IActionResult AddFood(AddBakeryDto addBakeryDto)
     {
@@ -37,21 +41,15 @@ public class BakeryController : ControllerBase
             Quantity = addBakeryDto.Quantity,
         };
 
-        // <summary> use case so chef cannot add empty food </summary>
-        if (addBakeryDto.Quantity < 1)
-        {
-            return BadRequest("Food cannot be empty");
-        }
-
-
         _bakeryContext.Bakery.Add(bakeryEntity);
         _bakeryContext.SaveChanges();
 
         return Ok(bakeryEntity);
     }
 
+    // <summary> controller action for deleting a food from database  </summary>
     [HttpDelete]
-    [Route("{bakeryId:guid}")]
+    [Route("DeleteFood")]
     public IActionResult DeleteFood(Guid bakeryId)
     {
         var food = _bakeryContext.Bakery.Find(bakeryId);
@@ -64,11 +62,12 @@ public class BakeryController : ControllerBase
         _bakeryContext.Bakery.Remove(food);
         _bakeryContext.SaveChanges();
 
-        return Ok();
+        return Ok($"Food {bakeryId} has been deleted successfully");
     }
 
+    // <summary> controller for updating user in database </summary>
     [HttpPut]
-    [Route("{bakeryId:guid}")]
+    [Route("UpdateFood")]
     public IActionResult UpdateFood(Guid bakeryId, UpdateBakeryDto updateBakeryDto)
     {
         var food = _bakeryContext.Bakery.Find(bakeryId);
@@ -82,7 +81,7 @@ public class BakeryController : ControllerBase
         food.Description = updateBakeryDto.Description;
         food.Quantity = updateBakeryDto.Quantity;
 
-        return Ok(food.Name + food.Description + food.Description);
+        return Ok($"Food {bakeryId} has been updated successfully");
     }
 }
 

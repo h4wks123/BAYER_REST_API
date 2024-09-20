@@ -1,4 +1,4 @@
-using REST_API.Data.Context;
+using REST_API.Data;
 
 using REST_API.Models.DTO.Order;
 using REST_API.Models.DTO.Users;
@@ -11,13 +11,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace REST_API.Controllers;
 
+// <summary> controller for orders which defines api calls </summary>
 [Route("api/[controller]")]
 [ApiController]
 public class OrderController : ControllerBase
 {
+    // <summary> Context for accessing order, bakery, and user data in the database. </summary>
     private readonly OrderContext _orderContext;
     private readonly BakeryContext _bakeryContext;
     private readonly UserContext _userContext;
+
+    // <summary> Constructor for the OrderContext, BakeryContext, and UserContext. </summary>
     public OrderController(OrderContext orderContext, BakeryContext bakeryContext, UserContext userContext)
     {
         _orderContext = orderContext;
@@ -25,6 +29,7 @@ public class OrderController : ControllerBase
         _userContext = userContext;
     }
 
+    // <summary> controller action for getting all orders from database  </summary>
     [HttpGet("all")]
     public IActionResult GetAllOrders()
     {
@@ -32,6 +37,7 @@ public class OrderController : ControllerBase
         return Ok(allOrders);
     }
 
+    // <summary> controller action for getting all ongoing orders from database  </summary>
     [HttpGet("ongoing")]
     public IActionResult GetOngoingOrders()
     {
@@ -39,6 +45,7 @@ public class OrderController : ControllerBase
         return Ok(ongoingOrders);
     }
 
+    // <summary> controller action for getting all cancelled orders from database  </summary>
     [HttpGet("cancelled")]
     public IActionResult GetCancelledOrders()
     {
@@ -46,6 +53,7 @@ public class OrderController : ControllerBase
         return Ok(cancelledOrders);
     }
 
+    // <summary> controller action for getting all completed orders from database  </summary>
     [HttpGet("completed")]
     public IActionResult GetCompletedOrders()
     {
@@ -53,7 +61,7 @@ public class OrderController : ControllerBase
         return Ok(completedOrders);
     }
 
-
+    // <summary> controller action for creating an order from database  </summary>
     [HttpPost]
     [Route("createOrder")]
     public IActionResult CreateOrder(Guid userId, Guid bakeryId, AddOrderDto addOrderDto)
@@ -77,11 +85,6 @@ public class OrderController : ControllerBase
             return BadRequest("Cannot order more than what is available.");
         }
 
-        if (addOrderDto.Quantity <= 0)
-        {
-            return BadRequest("Must order an existing meal.");
-        }
-
         var order = new Order()
         {
             BakeryId = addOrderDto.BakeryId,
@@ -100,6 +103,7 @@ public class OrderController : ControllerBase
 
     }
 
+    // <summary> controller for updating order in database </summary>
     [HttpPut]
     [Route("OrderType")]
     public IActionResult UpdateOrderType(Guid OrderId, UpdateOrderDto updateOrderDTO)
