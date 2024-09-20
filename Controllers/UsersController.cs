@@ -1,66 +1,84 @@
-using REST_API.Data;
-using REST_API.Models.DTO;
+using REST_API.Data.Context;
+using REST_API.Models.DTO.Users;
 using REST_API.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BAYER_REST_API.Controllers
+namespace REST_API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UsersController : ControllerBase
 {
+    private readonly UserContext _userContext;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public UsersController(UserContext userContext)
     {
-        private readonly UserContext dbContext;
+        _userContext = userContext;
+    }
 
-        public UsersController(UserContext dbContext)
+
+    [HttpGet]
+    public IActionResult GetAllUsers()
+    {
+        var allUsers = _userContext.User.ToList();
+
+        return Ok(allUsers);
+    }
+
+
+    [HttpPost]
+    public IActionResult AddCustomer(AddUserDto addUserDto)
+    {
+        var userEntity = new User()
         {
-            this.dbContext = dbContext;
+            Name = addUserDto.Name,
+            Email = addUserDto.Email,
+            Password = addUserDto.Password,
+        };
+
+        _userContext.User.Add(userEntity);
+        _userContext.SaveChanges();
+
+        return Ok(userEntity);
+    }
+
+    [HttpDelete]
+    [Route("{userId:guid}")]
+    public IActionResult DeleteUsers(Guid userId)
+    {
+        var user = _userContext.User.Find(userId);
+
+        if (user is null)
+        {
+            return NotFound();
         }
 
+        _userContext.User.Remove(user);
+        _userContext.SaveChanges();
 
-        [HttpGet]
-        public IActionResult GetAllUsers()
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("{userId:guid}")]
+    public IActionResult UpdateOrderType(Guid userId, UpdateUserDto updateUserDto)
+    {
+        var user = _userContext.User.Find(userId);
+
+        if (user is null)
         {
-            var allUsers = dbContext.User.ToList();
-
-            return Ok(allUsers);
+            return NotFound("User does not exist.");
         }
 
+        user.Name = updateUserDto.Name;
+        user.Email = updateUserDto.Email;
 
-        [HttpPost]
-        public IActionResult AddCustomer(AddUserDto addUserDto)
-        {
-            var userEntity = new User()
-            {
-                Name = addUserDto.Name,
-                Email = addUserDto.Email,
-                Password = addUserDto.Password,
-            };
+        _userContext.SaveChanges();
 
-            dbContext.User.Add(userEntity);
-            dbContext.SaveChanges();
-
-            return Ok(userEntity);
-        }
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public IActionResult DeleteUsers(Guid id)
-        {
-            var user = dbContext.User.Find(id);
-
-            if (user is null)
-            {
-                return NotFound();
-            }
-
-            dbContext.User.Remove(user);
-            dbContext.SaveChanges();
-
-            return Ok();
-        }
-
+        return Ok(user.Name + user.Email);
     }
 
 }
+
+

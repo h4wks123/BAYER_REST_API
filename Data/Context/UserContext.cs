@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using REST_API.Models.Entities;
 
-namespace REST_API.Data;
+namespace REST_API.Data.Context;
 public class UserContext : DbContext
 {
     public DbSet<User> User { get; set; }

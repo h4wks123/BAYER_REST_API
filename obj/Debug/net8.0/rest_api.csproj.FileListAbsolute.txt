@@ -136,3 +136,4 @@
 /home/hawks/projects/SAIB_projects/rest_api/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
 /home/hawks/projects/SAIB_projects/rest_api/bin/Debug/net8.0/runtimes/win/lib/net6.0/System.Windows.Extensions.dll
 /home/hawks/projects/SAIB_projects/rest_api/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.InMemory.dll
+/home/hawks/projects/SAIB_projects/rest_api/obj/Debug/net8.0/rest_api.sourcelink.json

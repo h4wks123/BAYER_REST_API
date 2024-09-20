@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using REST_API.Data;
+using REST_API.Data.Context;
 using REST_API.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);

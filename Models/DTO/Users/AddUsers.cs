@@ -1,4 +1,4 @@
-namespace REST_API.Models.DTO;
+namespace REST_API.Models.DTO.Users;
 
 public class AddUserDto
 {
